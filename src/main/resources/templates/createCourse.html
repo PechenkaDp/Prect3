@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Course</title>
+</head>
+<body>
+<h1>Create Course</h1>
+<form action="#" th:action="@{/courses/create}" th:object="${course}" method="post">
+  <label for="title">Course Title:</label>
+  <input type="text" id="title" th:field="*{title}" required>
+  <button type="submit">Create</button>
+</form>
+<a href="/courses">Back to Course List</a>
+</body>
+</html>

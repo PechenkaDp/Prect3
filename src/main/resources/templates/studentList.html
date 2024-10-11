@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+</head>
+<body>
+<h1>Student List</h1>
+<a href="/students/create">Add Student</a>
+<ul>
+    <li th:each="student : ${students}">
+        <span th:text="${student.name}"></span> - <span th:text="${student.email}"></span>
+        <a th:href="@{'/students/edit/' + ${student.id}}">Edit</a>
+        <a th:href="@{'/students/delete/' + ${student.id}}">Delete</a>
+    </li>
+</ul>
+</body>
+</html>

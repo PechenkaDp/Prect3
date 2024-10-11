@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teachers List</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <h1>Teachers</h1>
+    <a href="/">Home</a>
+</header>
+
+<main>
+    <h2>Teachers List</h2>
+    <a href="/teachers/create">Add New Teacher</a>
+    <ul>
+        <li th:each="teacher : ${teachers}">
+            <span th:text="${teacher.name}"></span>
+            <a th:href="@{'/teachers/edit/' + ${teacher.id}}">Edit</a>
+            <a th:href="@{'/teachers/delete/' + ${teacher.id}}">Delete</a>
+        </li>
+    </ul>
+</main>
+
+<footer>
+    <p>&copy; 2024 School Management System</p>
+</footer>
+</body>
+</html>

@@ -3,10 +3,11 @@ package com.example.prect3.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 @Entity
-@Table(name = "students")
-public class StudentEntity {
+@Table(name = "teachers")
+public class TeacherEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +17,8 @@ public class StudentEntity {
     @Size(max = 100)
     private String name;
 
-    @NotBlank
-    @Size(max = 100)
-    private String email;
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
+    private List<CourseEntity> courses;
 
     public Long getId() {
         return id;
@@ -36,11 +36,11 @@ public class StudentEntity {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public List<CourseEntity> getCourses() {
+        return courses;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCourses(List<CourseEntity> courses) {
+        this.courses = courses;
     }
 }

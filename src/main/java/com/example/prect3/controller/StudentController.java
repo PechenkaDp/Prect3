@@ -1,7 +1,8 @@
-package com.mpt.journal.controller;
+package com.example.prect3.controller;
 
-import com.mpt.journal.model.StudentModel;
-import com.mpt.journal.service.StudentService;
+import com.example.prect3.entity.StudentEntity;
+import com.example.prect3.service.StudentServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,54 +10,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/students")
 public class StudentController {
-    private final StudentService studentService;
 
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
-    }
+    @Autowired
+    private StudentServices studentServices;
 
-    @GetMapping("/students")
+    @GetMapping
     public String getAllStudents(Model model) {
-        model.addAttribute("students", studentService.findAllStudents());
+        List<StudentEntity> students = studentServices.getAllStudents();
+        model.addAttribute("students", students);
         return "studentList";
     }
 
-    @PostMapping("/students/add")
-    public String addStudent(@RequestParam String name, @RequestParam String lastName, @RequestParam String firstName, @RequestParam String middleName) {
-        StudentModel student = new StudentModel(0, name, lastName, firstName, middleName);
-        studentService.addStudent(student);
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("student", new StudentEntity());
+        return "createStudent";
+    }
+
+    @PostMapping("/create")
+    public String createStudent(@ModelAttribute("student") StudentEntity student) {
+        studentServices.saveStudent(student);
         return "redirect:/students";
     }
 
-    @PostMapping("/students/update")
-    public String updateStudent(@RequestParam int id, @RequestParam String name, @RequestParam String lastName, @RequestParam String firstName, @RequestParam String middleName) {
-        StudentModel student = new StudentModel(id, name, lastName, firstName, middleName);
-        studentService.updateStudent(student);
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        StudentEntity student = studentServices.getStudentById(id);
+        if (student == null) {
+            return "error";
+        }
+        model.addAttribute("student", student);
+        return "editStudent";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateStudent(@PathVariable Long id, @ModelAttribute("student") StudentEntity student) {
+        student.setId(id);
+        studentServices.saveStudent(student);
         return "redirect:/students";
     }
 
-    @PostMapping("/students/delete")
-    public String deleteStudent(@RequestParam int id) {
-        studentService.deleteStudent(id);
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable Long id) {
+        studentServices.deleteStudent(id);
         return "redirect:/students";
-    }
-
-    @PostMapping("/students/deleteMultiple")
-    public String deleteMultipleStudents(@RequestParam List<Integer> ids) {
-        studentService.deleteMultipleStudents(ids);
-        return "redirect:/students";
-    }
-
-    @GetMapping("/students/search")
-    public String searchStudents(@RequestParam String searchTerm, Model model) {
-        model.addAttribute("students", studentService.searchStudents(searchTerm));
-        return "studentList";
-    }
-
-    @GetMapping("/students/filter")
-    public String filterStudents(@RequestParam(required = false) String name, @RequestParam(required = false) String lastName, @RequestParam(required = false) String firstName, Model model) {
-        model.addAttribute("students", studentService.filterStudents(name, lastName, firstName));
-        return "studentList";
     }
 }
